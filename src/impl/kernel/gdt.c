@@ -58,7 +58,7 @@ bool validate_gdt() {
 void check_gdt() {
     if (validate_gdt()) {
         print_set_color(PRINT_COLOR_GREEN, PRINT_COLOR_BLACK);
-        print_str("GDT initialized successfully.\n");
+        print_str("GDT initialized successfully!\n");
     } else {
         print_set_color(PRINT_COLOR_RED, PRINT_COLOR_BLACK);
         print_str("GDT initialization failed!\n");

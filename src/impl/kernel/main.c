@@ -22,13 +22,14 @@ void kernel_main() {
 
     
     // System INFO
-    print_set_color(PRINT_COLOR_WHITE, PRINT_COLOR_BLACK);
+    print_set_color(PRINT_COLOR_LIGHT_CYAN, PRINT_COLOR_BLACK);
     print_str("\n");
     print_system_info();
 }
 
 void print_system_info() {
     print_str("System Information:\n");
+    print_set_color(PRINT_COLOR_WHITE, PRINT_COLOR_BLACK);
 
     // CPU VENDOR
     char cpu_vendor[13];
