@@ -27,6 +27,3 @@ cls
 echo Make sure to close qemu before building again!
 echo.
 qemu-system-x86_64 -cdrom dist/x86_64/kernel.iso
-echo.
-echo Press any key to exit!
-pause >nul
