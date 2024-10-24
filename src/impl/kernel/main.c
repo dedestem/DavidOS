@@ -28,15 +28,13 @@ void kernel_main() {
 }
 
 void print_system_info() {
-    // Print a header
     print_str("System Information:\n");
 
-    // Print CPU vendor
+    // CPU VENDOR
     char cpu_vendor[13];
     uint32_t eax, ebx, ecx, edx;
 
-    // Get CPU vendor
-    eax = 0; // Requesting vendor string
+    eax = 0;
     __asm__ volatile (
         "cpuid":
         "=b"(ebx), "=d"(edx), "=c"(ecx):
@@ -52,11 +50,14 @@ void print_system_info() {
     print_str(cpu_vendor);
     print_str("\n");
 
-    // Print current privilege level
+    
+    // PRIVELAGE LEVEL
     uint64_t cs;
     __asm__ volatile ("movq %%cs, %0" : "=r"(cs)); // Move CS register into cs
     uint64_t privilege_level = cs & 0x3; // Lowest 2 bits indicate privilege level
 
     print_str("Current Privilege Level: ");
     print_str((privilege_level == 0) ? "0 (Kernel)\n" : "3 (User)\n");
+
+    return 0;
 }
