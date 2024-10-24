@@ -17,4 +17,11 @@ void kernel_main() {
     // Notify Success
     print_set_color(PRINT_COLOR_GREEN, PRINT_COLOR_BLACK);
     print_str("Kernel Loaded!\n");
+
+    test();
+}
+
+void test() {
+    double test = 0/0;
+    return 0;
 }
