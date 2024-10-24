@@ -11,14 +11,15 @@ void kernel_main() {
     print_str("64 Bit long mode started!\n");
 
     // Init
-    setup_gdt();
     init_idt();
+    setup_gdt();
 
     // Notify Success
     print_set_color(PRINT_COLOR_GREEN, PRINT_COLOR_BLACK);
     print_str("Kernel Loaded!\n");
 
     test();
+    return 0;
 }
 
 void test() {

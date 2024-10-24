@@ -9,10 +9,24 @@ struct idt_ptr idt_pointer;
 volatile int idt_initialized = 0;
 volatile int interrupt_triggered = 0;
 
-// Example interrupt handler
-void example_interrupt_handler() {
-    interrupt_triggered = 1; // Set the flag to indicate the interrupt was handled
-    print_str("Interrupt handler executed!\n");
+// Division by zero handler
+void div_by_zero_handler() {
+    print_set_color(PRINT_COLOR_RED, PRINT_COLOR_BLACK);
+    print_str("Exception: Division by zero (0/0) occurred!\n");
+    
+    while (1) {
+        __asm__ volatile ("hlt"); // Halt the CPU until next interrupt
+    }
+}
+
+// General interrupt handler
+void general_interrupt_handler() {
+    print_set_color(PRINT_COLOR_RED, PRINT_COLOR_BLACK);
+    print_str("General Interrupt Handler Executed!\n");
+
+    while (1) {
+        __asm__ volatile ("hlt"); // Halt the CPU until next interrupt
+    }
 }
 
 // Set an IDT entry
@@ -23,16 +37,22 @@ void set_idt_entry(int index, void (*handler)(), uint16_t selector, uint8_t type
     idt[index].type_attr = type_attr;
     idt[index].offset_mid = ((uint64_t)handler >> 16) & 0xFFFF;
     idt[index].offset_high = ((uint64_t)handler >> 32) & 0xFFFFFFFF;
-    idt[index].reserved = 0;
+    idt[index].reserved = 0; // Ensure reserved bits are clear
 }
 
 // Initialize the IDT
 void init_idt() {
+    // Clear the IDT
+    for (int i = 0; i < IDT_SIZE; i++) {
+        idt[i] = (struct idt_entry){0}; // Zero out each entry
+    }
+
     idt_pointer.limit = (sizeof(struct idt_entry) * IDT_SIZE) - 1;
     idt_pointer.base = (uint64_t)&idt;
 
-    // Set the example interrupt handler for interrupt vector 32 (IRQ 0)
-    set_idt_entry(32, example_interrupt_handler, 0x08, 0x8E); // Example: IRQ 0 (Timer)
+    // Set the IDT entries
+    set_idt_entry(0, div_by_zero_handler, 0x08, 0x8E); // Divide by zero
+    set_idt_entry(1, general_interrupt_handler, 0x08, 0x8E); // General interrupt
 
     // Load the IDT
     __asm__ volatile ("lidt %0" : : "m"(idt_pointer));
