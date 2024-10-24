@@ -40,8 +40,10 @@ void init_idt() {
     // Check IDT initialization
     if (idt_pointer.base != 0 && idt_pointer.limit == (sizeof(struct idt_entry) * IDT_SIZE) - 1) {
         idt_initialized = 1; // Set the flag to indicate successful initialization
+        print_set_color(PRINT_COLOR_GREEN, PRINT_COLOR_BLACK);
         print_str("IDT initialized successfully!\n");
     } else {
+        print_set_color(PRINT_COLOR_RED, PRINT_COLOR_BLACK);
         print_str("IDT initialization failed!\n");
     }
 }
