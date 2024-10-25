@@ -7,10 +7,14 @@ struct idt_ptr idt_pointer;
 
 // Default handler (no-op)
 void default_handler(uint64_t interrupt_number) {
-    print_set_color(PRINT_COLOR_RED, PRINT_COLOR_BLACK);
-    print_str("Exception: Unknown interrupt #");
-    print_dec(interrupt_number); // Print the interrupt number
-    print_str(" occurred!\n");
+    if (interrupt_number == 10) {
+        interrupt_10_handler();
+    } else {
+        print_set_color(PRINT_COLOR_LIGHT_RED, PRINT_COLOR_BLACK);
+        print_str("Exception: Unknown interrupt #");
+        print_dec(interrupt_number); // Print the interrupt number
+        print_str(" occurred!\n");
+    }
 }
 
 // Division by zero handler
@@ -25,6 +29,12 @@ void invalid_opcode_handler() {
     print_set_color(PRINT_COLOR_RED, PRINT_COLOR_BLACK);
     print_str("Exception: Invalid opcode occurred!\n");
     while (1); // Hang here indefinitely
+}
+
+//10 handler
+void interrupt_10_handler() {
+    print_set_color(PRINT_COLOR_RED, PRINT_COLOR_BLACK);
+    print_str("interrupt 10");
 }
 
 // Page fault handler
@@ -74,6 +84,7 @@ void init_idt() {
     // Set specific handlers
     set_idt_entry(0, (void (*)())div_by_zero_handler, 0x08, 0x8E);          // Division by zero
     set_idt_entry(6, (void (*)())invalid_opcode_handler, 0x08, 0x8E);      // Invalid opcode
+    set_idt_entry(10, (void (*)())interrupt_10_handler, 0x08, 0x8E); // 10
     set_idt_entry(14, (void (*)())page_fault_handler, 0x08, 0x8E);         // Page fault
     set_idt_entry(33, (void (*)())keyboard_interrupt_handler, 0x08, 0x8E); // Keyboard interrupt
 

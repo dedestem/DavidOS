@@ -36,8 +36,6 @@ void print_system_info() {
 
     print_str("Ring: ");
     print_str((privilege_level == 0) ? "0 (Kernel)\n" : "3 (User)\n");
-    
-    // Verwijder return statement, aangezien dit een void functie is
 }
 
 // MAIN
