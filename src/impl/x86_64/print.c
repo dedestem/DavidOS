@@ -81,3 +81,22 @@ void print_str(char* str) {
 void print_set_color(uint8_t foreground, uint8_t background) {
     color = foreground + (background << 4);
 }
+
+void print_dec(int number) {
+    if (number < 0) {
+        print_str("-"); // Print negative sign for negative numbers
+        number = -number; // Make number positive for further processing
+    }
+
+    // Convert the number to string
+    char buffer[12]; // Enough to hold all digits of an int plus null terminator
+    char *ptr = buffer + sizeof(buffer) - 1; // Pointer to the end of the buffer
+    *ptr = '\0'; // Null-terminate the string
+
+    do {
+        *--ptr = (number % 10) + '0'; // Get the last digit and convert it to a char
+        number /= 10; // Remove the last digit
+    } while (number != 0); // Continue until no digits remain
+
+    print_str(ptr); // Print the string starting from the first digit
+}
