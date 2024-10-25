@@ -24,7 +24,7 @@ check_multiboot:
 	ret
 .no_multiboot:
 	mov al, "M"
-	jmp error
+	call print_error
 
 check_cpuid:
 	pushfd
@@ -42,7 +42,7 @@ check_cpuid:
 	ret
 .no_cpuid:
 	mov al, "C"
-	jmp error
+	call print_error
 
 check_long_mode:
 	mov eax, 0x80000000
@@ -58,7 +58,7 @@ check_long_mode:
 	ret
 .no_long_mode:
 	mov al, "L"
-	jmp error
+	call print_error
 
 setup_page_tables:
 	mov eax, page_table_l3
@@ -71,7 +71,6 @@ setup_page_tables:
 
 	mov ecx, 0 ; counter
 .loop:
-
 	mov eax, 0x200000 ; 2MiB
 	mul ecx
 	or eax, 0b10000011 ; present, writable, huge page
@@ -84,35 +83,31 @@ setup_page_tables:
 	ret
 
 enable_paging:
-	; pass page table location to cpu
 	mov eax, page_table_l4
 	mov cr3, eax
 
-	; enable PAE
 	mov eax, cr4
 	or eax, 1 << 5
 	mov cr4, eax
 
-	; enable long mode
 	mov ecx, 0xC0000080
 	rdmsr
 	or eax, 1 << 8
 	wrmsr
 
-	; enable paging
 	mov eax, cr0
 	or eax, 1 << 31
 	mov cr0, eax
 
 	ret
 
-error:
-	; print "ERR: X" where X is the error code
-	mov dword [0xb8000], 0x4f524f45
-	mov dword [0xb8004], 0x4f3a4f52
-	mov dword [0xb8008], 0x4f204f20
-	mov byte  [0xb800a], al
-	hlt
+print_error:
+	mov dword [0xb8000], 0x4f524f45  ; "ERO"
+	mov dword [0xb8004], 0x524f3a4f  ; "R:O"
+	mov dword [0xb8008], 0x20 ; ' ' (space)
+	mov [0xb800a], al          ; error code as character
+	hlt                        ; halt execution
+	ret
 
 section .bss
 align 4096
