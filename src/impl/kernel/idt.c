@@ -9,14 +9,20 @@ struct idt_ptr idt_pointer;
 volatile int idt_initialized = 0;
 
 // Default handler (no-op)
-void default_handler() {}
+void default_handler() {
+    print_set_color(PRINT_COLOR_RED, PRINT_COLOR_BLACK);
+    print_str("Exception: Unknowen occurred!\n");
+    while (1) {
+
+    }
+}
 
 // Division by zero handler
 void div_by_zero_handler() {
     print_set_color(PRINT_COLOR_RED, PRINT_COLOR_BLACK);
     print_str("Exception: Division by zero (0/0) occurred!\n");
     while (1) {
-        __asm__ volatile ("hlt"); // Halt the CPU until next interrupt
+
     }
 }
 
@@ -35,10 +41,9 @@ void set_idt_entry(int index, void (*handler)(), uint16_t selector, uint8_t type
 void init_idt() {
     // Clear the IDT
     for (int i = 0; i < IDT_SIZE; i++) {
-        set_idt_entry(i, default_handler, 0x08, 0x8E); // Set default for all
+        set_idt_entry(i, default_handler, 0x08, 0x8E);
     }
 
-    // Set the specific handler for divide by zero
     set_idt_entry(0, div_by_zero_handler, 0x08, 0x8E);
 
     // Load the IDT
@@ -48,6 +53,6 @@ void init_idt() {
     print_str("Loading IDT...\n");
     __asm__ volatile ("lidt %0" : : "m"(idt_pointer));
     print_str("IDT Loaded. Enabling Interrupts...\n");
-    // Temporarily comment out the following line for debugging:
-    //asm volatile("sti");
+
+    __asm__ volatile("cli; sti;"); //CLI to clear pending interrupts and sti to start interupts
 }
