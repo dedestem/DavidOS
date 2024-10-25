@@ -34,6 +34,7 @@ if %errorlevel% neq 0 (
 echo.
 echo Build Succeeded!
 echo.
+pause
 
 cls
 title OS Runner - Running

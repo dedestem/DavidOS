@@ -4,29 +4,7 @@
 
 #include <stdint.h>
 
-void kernel_main() {
-    // Clear BIOS Text
-    print_clear();
-
-    // Notify User
-    print_set_color(PRINT_COLOR_WHITE, PRINT_COLOR_BLACK);
-    print_str("64 Bit long mode started!\n");
-
-    // Initialize IDT and GDT
-    init_idt();
-    setup_gdt();
-
-    // Notify Success
-    print_set_color(PRINT_COLOR_GREEN, PRINT_COLOR_BLACK);
-    print_str("Kernel Loaded!\n");
-
-    
-    // System INFO
-    print_set_color(PRINT_COLOR_LIGHT_CYAN, PRINT_COLOR_BLACK);
-    print_str("\n");
-    print_system_info();
-}
-
+// Functions
 void print_system_info() {
     print_str("System Information:\n");
     print_set_color(PRINT_COLOR_WHITE, PRINT_COLOR_BLACK);
@@ -51,14 +29,39 @@ void print_system_info() {
     print_str(cpu_vendor);
     print_str("\n");
 
-    
-    // PRIVELAGE LEVEL
+    // PRIVILEGE LEVEL
     uint64_t cs;
     __asm__ volatile ("movq %%cs, %0" : "=r"(cs)); // Move CS register into cs
     uint64_t privilege_level = cs & 0x3; // Lowest 2 bits indicate privilege level
 
-    print_str("Current Privilege Level: ");
+    print_str("Ring: ");
     print_str((privilege_level == 0) ? "0 (Kernel)\n" : "3 (User)\n");
-
-    return 0;
+    
+    // Verwijder return statement, aangezien dit een void functie is
 }
+
+// MAIN
+void kernel_main() {
+    // Clear BIOS Text
+    print_clear();
+
+    // Notify User
+    print_set_color(PRINT_COLOR_WHITE, PRINT_COLOR_BLACK);
+    print_str("64 Bit long mode started!\n");
+
+    // Initialize IDT and GDT
+    init_idt();
+    setup_gdt();
+
+    // Notify Success
+    print_set_color(PRINT_COLOR_GREEN, PRINT_COLOR_BLACK);
+    print_str("Kernel Loaded!\n");
+
+    // System INFO
+    print_set_color(PRINT_COLOR_LIGHT_CYAN, PRINT_COLOR_BLACK);
+    print_str("\n");
+    print_system_info();
+
+    while (1);
+}
+
