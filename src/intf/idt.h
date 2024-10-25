@@ -28,6 +28,5 @@ void set_idt_entry(int index, void (*handler)(), uint16_t selector, uint8_t type
 
 // Global variables for IDT status
 extern volatile int idt_initialized;
-extern volatile int interrupt_triggered;
 
 #endif // IDT_H

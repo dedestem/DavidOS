@@ -1,5 +1,8 @@
 @echo off
-title OS Runner - Building
+title OS Runner - Building docker
+cls
+echo Building docker
+docker rmi myos-buildenv -f
 cls
 echo Building!
 echo.

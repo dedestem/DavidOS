@@ -7,8 +7,6 @@ Build process designed for win11
 ### Setup
     Add Qemu to path
 
- - `docker build buildenv -t myos-buildenv`
-
 ### Run: 
 start Run.bat
 
