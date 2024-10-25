@@ -51,7 +51,7 @@ void kernel_main() {
 
     // Initialize IDT and GDT
     init_idt();
-    setup_gdt();
+    //setup_gdt();
 
     // Notify Success
     print_set_color(PRINT_COLOR_GREEN, PRINT_COLOR_BLACK);
