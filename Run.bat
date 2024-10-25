@@ -34,11 +34,10 @@ if %errorlevel% neq 0 (
 echo.
 echo Build Succeeded!
 echo.
-echo Press any key to run!
-pause >nul
 
-title OS Runner - Running
 cls
+title OS Runner - Running
+
 echo Make sure to close qemu before building again!
 echo.
 
