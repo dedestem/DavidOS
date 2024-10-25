@@ -2,6 +2,7 @@
 title OS Runner - Building docker
 cls
 echo Building docker
+docker pull randomdude/gcc-cross-x86_64-elf
 docker rmi myos-buildenv -f
 cls
 echo Building!
